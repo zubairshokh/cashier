@@ -70,7 +70,7 @@ defmodule Cashier.Gateways.PayPal do
     request(:post, "/v1/payments/payment", req_data, state)
   end
 
-  def create_payment(amount, opts, state) do
+  def initiate_payment(amount, opts, state) do
     req_data = %{}
       |> put_intent(:sale)
       |> put_payer()
@@ -79,6 +79,12 @@ defmodule Cashier.Gateways.PayPal do
     
     request(:post, "/v1/payments/payment", req_data, state)
   end  
+
+  def execute_payment(payment_id, payer_id) do
+    req_data = %{payer_id: payer_id}
+    
+    request(:post, "/v1/payments/payment/#{payment_id}/execute", req_data, state)
+  end
 
   def refund(id, opts, state) do
     req_data = case opts[:amount] do

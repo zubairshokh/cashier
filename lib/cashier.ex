@@ -21,10 +21,10 @@ defmodule Cashier do
   def purchase(amount, card, opts),
     do: send_event(opts, {:purchase, amount, card})
 
-  def create_payment(amount),
+  def initiate_payment(amount),
     do: purchase(amount, default_opts())
-  def create_payment(amount, opts),
-    do: send_event(opts, {:create_payment, amount})    
+  def initiate_payment(amount, opts),
+    do: send_event(opts, {:initiate_payment, amount})    
     
   def refund(id),
     do: refund(id, default_opts())

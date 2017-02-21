@@ -67,7 +67,7 @@ defmodule Cashier.Gateways.PayPalTest do
     assert {:error, :invalid, err_result} == Gateway.authorize(9.75, payment_card(), opts, config)
     assert {:error, :invalid, err_result} == Gateway.capture("1234", 9.75, opts, config)
     assert {:error, :invalid, err_result} == Gateway.purchase(9.75, payment_card(), opts, config)
-    # assert {:error, :invalid, err_result} == Gateway.create_payment(9.75, opts, config)
+    # assert {:error, :invalid, err_result} == Gateway.initiate_payment(9.75, opts, config)
     assert {:error, :invalid, err_result} == Gateway.refund("1234", opts, config)
     assert {:error, :invalid, err_result} == Gateway.store(payment_card(), opts, config)
     assert {:error, :invalid, err_result} == Gateway.unstore("CARD-123", [], config)
@@ -167,7 +167,7 @@ defmodule Cashier.Gateways.PayPalTest do
     assert response == expected_response
   end
 
-  test "purchase/3 should successfully create payment request", %{config: config, bypass: bypass} do
+  test "purchase/3 should successfully initiate payment request", %{config: config, bypass: bypass} do
     expected_response = "{\"id\":\"PAY-123\"}"
 
     Bypass.expect bypass, fn conn ->
@@ -177,14 +177,14 @@ defmodule Cashier.Gateways.PayPalTest do
       assert "/v1/payments/payment" == conn.request_path
       assert has_header(conn, {"authorization", "bearer some.token"})
       assert has_header(conn, {"content-type", "application/json"})
-      assert body == Fixtures.create_payment_request
+      assert body == Fixtures.initiate_payment_request
 
       Plug.Conn.send_resp(conn, 201, expected_response)
     end
 
     opts = default_opts() ++ [billing_address: address(), return_url: "", cancel_url: ""]
 
-    {:ok, id, {:paypal, response}} = Gateway.create_payment(9.75, opts, config)
+    {:ok, id, {:paypal, response}} = Gateway.initiate_payment(9.75, opts, config)
 
     assert id == "PAY-123"
     assert response == expected_response

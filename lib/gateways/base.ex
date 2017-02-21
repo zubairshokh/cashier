@@ -22,10 +22,14 @@ defmodule Cashier.Gateways.Base do
         purchase(amount, card, opts, state)
           |> handle_response
       end
-      def call({:create_payment, amount}, opts, state) do
-        create_payment(amount, opts, state)
+      def call({:initiate_payment, amount}, opts, state) do
+        initiate_payment(amount, opts, state)
           |> handle_response
       end      
+      def call({:execute_payment, payer_id}, opts, state) do
+        execute_payment(payer_id, opts, state)
+          |> handle_response
+      end            
       def call({:refund, id}, opts, state) do
         refund(id, opts, state)
           |> handle_response
@@ -58,7 +62,10 @@ defmodule Cashier.Gateways.Base do
       def purchase(amount, card, opts, state),
         do: :not_implemented
 
-      def create_payment(amount, opts, state),
+      def initiate_payment(amount, opts, state),
+        do: :not_implemented
+
+      def execute_payment(payer_id, opts, state),
         do: :not_implemented
 
       def refund(id, opts, state),
@@ -78,7 +85,8 @@ defmodule Cashier.Gateways.Base do
         authorize: 4,
         capture: 4,
         purchase: 4,
-        create_payment: 3,
+        initiate_payment: 3,
+        execute_payment: 3,
         refund: 3,
         store: 3,
         unstore: 3,
