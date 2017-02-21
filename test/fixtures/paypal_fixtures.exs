@@ -69,6 +69,16 @@ defmodule Cashier.PayPalFixtures do
     }
   end
 
+  def create_payment_request do
+    Poison.encode! %{
+      intent: "sale",
+      payer: %{
+        payment_method: "paypal"
+      },
+      transactions: transactions()
+    }
+  end  
+
   def purchase_request do
     Poison.encode! %{
       intent: "sale",

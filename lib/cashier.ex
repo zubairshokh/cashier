@@ -20,6 +20,11 @@ defmodule Cashier do
     do: purchase(amount, card, default_opts())
   def purchase(amount, card, opts),
     do: send_event(opts, {:purchase, amount, card})
+
+  def create_payment(amount),
+    do: purchase(amount, default_opts())
+  def create_payment(amount, opts),
+    do: send_event(opts, {:create_payment, amount})    
     
   def refund(id),
     do: refund(id, default_opts())
