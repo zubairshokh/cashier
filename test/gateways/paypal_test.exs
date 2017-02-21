@@ -182,7 +182,7 @@ defmodule Cashier.Gateways.PayPalTest do
       Plug.Conn.send_resp(conn, 201, expected_response)
     end
 
-    opts = default_opts() ++ [billing_address: address()]
+    opts = default_opts() ++ [billing_address: address(), return_url: "", cancel_url: ""]
 
     {:ok, id, {:paypal, response}} = Gateway.create_payment(9.75, opts, config)
 

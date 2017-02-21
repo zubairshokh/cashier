@@ -75,7 +75,11 @@ defmodule Cashier.PayPalFixtures do
       payer: %{
         payment_method: "paypal"
       },
-      transactions: transactions()
+      transactions: transactions(),
+      redirect_urls: %{
+        return_url: "",
+        cancel_url: ""
+      }
     }
   end  
 

@@ -74,6 +74,7 @@ defmodule Cashier.Gateways.PayPal do
     req_data = %{}
       |> put_intent(:sale)
       |> put_payer()
+      |> put_redirect_urls(opts)
       |> put_transactions(amount, opts)
     
     request(:post, "/v1/payments/payment", req_data, state)
@@ -213,6 +214,14 @@ defmodule Cashier.Gateways.PayPal do
     
     Map.put(map, :payer, payer)
   end  
+
+  defp put_redirect_urls(map, opts) do
+    redirect_urls = %{}
+      |> Map.put(:return_url, opts[:return_url])
+      |> Map.put(:cancel_url, opts[:cancel_url])
+    
+    Map.put(map, :redirect_urls, redirect_urls)
+  end    
   
   defp put_funding_instruments(map, card, opts) do
     credit_card = put_credit_card(%{}, card, opts)
