@@ -80,7 +80,7 @@ defmodule Cashier.Gateways.PayPal do
     request(:post, "/v1/payments/payment", req_data, state)
   end  
 
-  def execute_payment(payment_id, payer_id, state) do
+  def execute_payment(payment_id, payer_id, opts, state) do
     req_data = %{payer_id: payer_id}
 
     request(:post, "/v1/payments/payment/#{payment_id}/execute", req_data, state)
