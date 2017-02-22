@@ -65,7 +65,7 @@ defmodule Cashier.Gateways.Base do
       def initiate_payment(amount, opts, state),
         do: :not_implemented
 
-      def execute_payment(payer_id, opts, state),
+      def execute_payment(payment_id, payer_id, opts, state),
         do: :not_implemented
 
       def refund(id, opts, state),
