@@ -26,8 +26,8 @@ defmodule Cashier.Gateways.Base do
         initiate_payment(amount, opts, state)
           |> handle_response
       end      
-      def call({:execute_payment, payer_id}, opts, state) do
-        execute_payment(payer_id, opts, state)
+      def call({:execute_payment, payment_id, payer_id}, opts, state) do
+        execute_payment(payment_id, payer_id, opts, state)
           |> handle_response
       end            
       def call({:refund, id}, opts, state) do
@@ -86,7 +86,7 @@ defmodule Cashier.Gateways.Base do
         capture: 4,
         purchase: 4,
         initiate_payment: 3,
-        execute_payment: 3,
+        execute_payment: 4,
         refund: 3,
         store: 3,
         unstore: 3,
