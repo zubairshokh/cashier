@@ -70,8 +70,8 @@ defmodule Cashier.Gateways.PayPal do
     request(:post, "/v1/payments/payment", req_data, state)
   end
 
-  def initiate_payment(amount, opts, state) do
-    req_data = %{}
+  def initiate_payment(amount, opts, state) do  
+      req_data = %{}
       |> put_intent(:sale)
       |> put_payer()
       |> put_redirect_urls(opts)
@@ -275,8 +275,10 @@ defmodule Cashier.Gateways.PayPal do
       }
     }
     
-    Map.put(map, :transactions, [%{amount: amount_map}])
-  end
+    item_lists= opts[:item_list]
+
+   Map.put(map, :transactions, [%{amount: amount_map,item_list: item_lists}])
+    end
 
   defp put_capture_amount(map, amount, opts) do
     amount = %{

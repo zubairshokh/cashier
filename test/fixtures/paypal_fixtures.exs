@@ -122,7 +122,8 @@ defmodule Cashier.PayPalFixtures do
             subtotal: 9.75,
             tax: 0
           }
-        }  
+        },
+        item_list: item_list()  
       }
     ]
   end
@@ -164,5 +165,29 @@ defmodule Cashier.PayPalFixtures do
         state: "New York"
       }
     }
+  end
+
+  defp item_list do
+   %{items: [
+     %{
+      name: "hat",
+      description: "Brown hat.",
+      quantity: "5",
+      price: "3",
+      tax: "0.01",
+      sku: "1",
+      currency: "USD"
+      },
+      %{
+      name: "handbag",
+      description: "Black handbag.",
+      quantity: "1",
+      price: "15",
+      tax: "0.02",
+      sku: "product34",
+      currency: "USD"
+      }
+    ]
+   }
   end
 end

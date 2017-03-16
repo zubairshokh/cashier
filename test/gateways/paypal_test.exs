@@ -89,7 +89,7 @@ defmodule Cashier.Gateways.PayPalTest do
       Plug.Conn.send_resp(conn, 201, expected_response)
     end
 
-    opts = default_opts() ++ [billing_address: address()]
+    opts = default_opts() ++ [billing_address: address()] ++ [item_list: item_list()]  #added item_list
 
     {:ok, id, {:paypal, response}} = Gateway.authorize(9.75, payment_card(), opts, config)
 
@@ -115,7 +115,7 @@ defmodule Cashier.Gateways.PayPalTest do
     opts = default_opts() ++ [
       billing_address: address(),
       external_customer_id: "CUST-1"
-    ]
+    ] ++ [item_list: item_list()]  #added item_list
 
     {:ok, id, {:paypal, response}} = Gateway.authorize(9.75, "CARD-123", opts, config)
 
@@ -178,19 +178,19 @@ defmodule Cashier.Gateways.PayPalTest do
       assert has_header(conn, {"authorization", "bearer some.token"})
       assert has_header(conn, {"content-type", "application/json"})
       assert body == Fixtures.initiate_payment_request
-
+     
       Plug.Conn.send_resp(conn, 201, expected_response)
     end
 
-    opts = default_opts() ++ [billing_address: address(), return_url: "", cancel_url: ""]
+    opts = default_opts()  ++ [billing_address: address(), return_url: "", cancel_url: ""] ++ [item_list: item_list()]  #added item_list
 
     {:ok, id, {:paypal, response}} = Gateway.initiate_payment(9.75, opts, config)
-
+   
     assert id == "PAY-123"
     assert response == expected_response
   end  
 
-  test "purchase/4 should successfully process a credit card purchase request", %{config: config, bypass: bypass} do
+   test "purchase/4 should successfully process a credit card purchase request", %{config: config, bypass: bypass} do
     expected_response = "{\"id\":\"PAY-123\"}"
 
     Bypass.expect bypass, fn conn ->
@@ -205,10 +205,10 @@ defmodule Cashier.Gateways.PayPalTest do
       Plug.Conn.send_resp(conn, 201, expected_response)
     end
 
-    opts = default_opts() ++ [billing_address: address()]
+    opts = default_opts() ++ [billing_address: address()] ++ [item_list: item_list()]  #added item_list
 
     {:ok, id, {:paypal, response}} = Gateway.purchase(9.75, payment_card(), opts, config)
-
+     
     assert id == "PAY-123"
     assert response == expected_response
   end
@@ -231,7 +231,7 @@ defmodule Cashier.Gateways.PayPalTest do
     opts = default_opts() ++ [
       billing_address: address(),
       external_customer_id: "CUST-1"
-    ]
+    ] ++ [item_list: item_list()]  #added item_list
 
     {:ok, id, {:paypal, response}} = Gateway.purchase(9.75, "CARD-123", opts, config)
 
@@ -348,6 +348,30 @@ defmodule Cashier.Gateways.PayPalTest do
     [
       currency: "USD"
     ]
+  end
+
+  defp item_list do
+   %{items: [
+     %{
+      name: "hat",
+      description: "Brown hat.",
+      quantity: "5",
+      price: "3",
+      tax: "0.01",
+      sku: "1",
+      currency: "USD"
+      },
+      %{
+      name: "handbag",
+      description: "Black handbag.",
+      quantity: "1",
+      price: "15",
+      tax: "0.02",
+      sku: "product34",
+      currency: "USD"
+      }
+    ]
+   }
   end
 
   defp payment_card do
