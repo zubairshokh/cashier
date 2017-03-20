@@ -178,13 +178,13 @@ defmodule Cashier.Gateways.PayPalTest do
       assert has_header(conn, {"authorization", "bearer some.token"})
       assert has_header(conn, {"content-type", "application/json"})
       assert body == Fixtures.initiate_payment_request
-     
+    
       Plug.Conn.send_resp(conn, 201, expected_response)
     end
 
-    opts = default_opts()  ++ [billing_address: address(), return_url: "", cancel_url: ""] ++ [item_list: item_list()]  #added item_list
+    opts = default_opts()  ++ [billing_address: address(), return_url: "", cancel_url: ""]  ++ [item_list: item_list()]  #added item_list
 
-    {:ok, id, {:paypal, response}} = Gateway.initiate_payment(9.75, opts, config)
+   {:ok, id, {:paypal, response}} = Gateway.initiate_payment(9.75, opts, config)
    
     assert id == "PAY-123"
     assert response == expected_response
@@ -370,8 +370,23 @@ defmodule Cashier.Gateways.PayPalTest do
       sku: "product34",
       currency: "USD"
       }
-    ]
+    ],
+      shipping_address: shipping_address()
    }
+  end
+
+   defp shipping_address do
+    %{
+      recipient_name: "Brian Robinson",
+      line1: "4th Floor",
+      line2: "Unit #34",
+      city: "San Jose",
+      country_code: "US",
+      postal_code: "95131",
+      phone: "011862212345678",
+      state: "CA"
+    }
+
   end
 
   defp payment_card do

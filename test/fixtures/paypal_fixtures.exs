@@ -123,7 +123,7 @@ defmodule Cashier.PayPalFixtures do
             tax: 0
           }
         },
-        item_list: item_list()  
+        item_list: item_list() 
       }
     ]
   end
@@ -168,7 +168,7 @@ defmodule Cashier.PayPalFixtures do
   end
 
   defp item_list do
-   %{items: [
+ %{items: [
      %{
       name: "hat",
       description: "Brown hat.",
@@ -187,7 +187,24 @@ defmodule Cashier.PayPalFixtures do
       sku: "product34",
       currency: "USD"
       }
-    ]
-   }
+    ],
+      shipping_address: shipping_address() 
+    }
+    
+  
+  end
+
+  defp shipping_address do
+    %{
+      recipient_name: "Brian Robinson",
+      line1: "4th Floor",
+      line2: "Unit #34",
+      city: "San Jose",
+      country_code: "US",
+      postal_code: "95131",
+      phone: "011862212345678",
+      state: "CA"
+    }
+
   end
 end

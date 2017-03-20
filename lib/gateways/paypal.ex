@@ -274,11 +274,24 @@ defmodule Cashier.Gateways.PayPal do
         shipping: 0
       }
     }
-    
-    item_lists= opts[:item_list]
-
-   Map.put(map, :transactions, [%{amount: amount_map,item_list: item_lists}])
+ 
+   transaction =
+   %{amount: amount_map}
+   |> put_items(opts)
+ case Map.has_key?(map, :transactions) do
+     true -> Map.put(map, :transactions, map.transactions ++ [transaction])
+     false -> Map.put_new(map, :transactions, [transaction])
+   end
+   
     end
+
+ defp put_items(transaction, opts) do
+  case opts[:item_list] do
+     nil -> transaction 
+     items ->
+     Map.merge(transaction,%{item_list: items}, fn(_k, v1, v2) -> Map.merge(v1, v2) end)
+    end
+ end 
 
   defp put_capture_amount(map, amount, opts) do
     amount = %{
